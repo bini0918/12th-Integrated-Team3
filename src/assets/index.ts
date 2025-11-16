@@ -19,3 +19,4 @@ export {default as close} from "./close.svg";
 export {default as check} from "./check.svg";
 export {default as scissors} from "./scissor.svg";
 export {default as trash_can} from "./trash-can.svg";
+export {default as next} from "./next.svg";
