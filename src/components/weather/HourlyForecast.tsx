@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { NightClouds, NightMoon, NightWind, next } from '../../assets';
+import type { Location } from '../../types/location';
 
 const hours = [
   {
@@ -124,9 +125,12 @@ const hours = [
   },
 ];
 
+type HourlyForecastProps = {
+  location: Location;
+};
 const HOURS_PER_PAGE = 12;
 
-const HourlyForecast = () => {
+const HourlyForecast = ({ location }: HourlyForecastProps) => {
   const [startIndex, setStartIndex] = useState(0);
 
   const visibleHours = hours.slice(startIndex, startIndex + HOURS_PER_PAGE);
@@ -142,7 +146,7 @@ const HourlyForecast = () => {
   };
   return (
     <div className="w-4xl h-50 border-2 border-[#F2F2F2] rounded-2xl bg-[#FFFFFF]">
-      <h2 className="text-[20px] font-bold text-black mt-3 ml-5">시간별 현황</h2>
+      <h2 className="text-[20px] font-bold text-black mt-3 ml-5"> {location.name} 시간별 현황</h2>
       <div className="relative mt-7 mb-4">
         <div className="pointer-events-none absolute inset-x-13 top-1/2 h-px -translate-y-1/2 bg-gray-200" />
 
