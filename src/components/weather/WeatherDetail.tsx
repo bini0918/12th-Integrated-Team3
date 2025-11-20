@@ -99,7 +99,6 @@ const WeatherHeader = memo(({ icon, temperature, weatherStatus }: {
 
 export default function WeatherDisplay(props: WeatherDisplayProps) {
   const { location } = props;
-
   const {
     date,
     temperature,
@@ -121,11 +120,13 @@ export default function WeatherDisplay(props: WeatherDisplayProps) {
       />
 
       <div className="flex flex-wrap justify-center gap-4 md:gap-8 p-4 mb-5">
-        {stats.map((stat, i) => <StatItem key={i} {...stat} />)}
+        {stats.map((stat, i) => 
+        <StatItem key={i} {...stat} />)}
       </div>
 
       <div className="flex justify-center gap-3 mb-5">
-        {tags.map(tag => <StatusTag key={tag.id} {...tag} />)}
+        {tags.map(tag => 
+        <StatusTag key={tag.id} {...tag} />)}
       </div>
     </div>
   );
