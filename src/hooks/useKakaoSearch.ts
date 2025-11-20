@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 export default function useKakaoSearch() {
   const [results, setResults] = useState<any[]>([]);
-  const [keyword, setKeyword] = useState("");
+  const [keyword, setKeyword] = useState('');
   const [pagination, setPagination] = useState<any>(null);
 
   const search = () => {
@@ -20,11 +20,18 @@ export default function useKakaoSearch() {
     });
   };
 
+  const reset = () => {
+    setKeyword('');
+    setResults([]);
+    setPagination(null);
+  };
+
   return {
     keyword,
     setKeyword,
     results,
     pagination,
     search,
+    reset,
   };
 }
