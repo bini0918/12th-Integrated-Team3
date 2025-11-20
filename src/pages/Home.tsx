@@ -48,6 +48,7 @@ const Home = () => {
       lat: Number(place.y),
       lng: Number(place.x),
       address: place.road_address_name || place.address_name,
+      pinned: false,
     };
 
     setLocations(prev => [...prev, newLocation]);
