@@ -6,9 +6,9 @@ interface WeekProps {
   location: Location;
 }
 
-// location 기준으로 주간 데이터 생성
+
 const getWeeklyWeather = (location: Location) => {
-  // 앞으로 API 연동 시 여기서 location.id로 분기 가능
+  // 앞으로 API 연동 시 여기서 location.id로 분기 처리 예정
   return [
     { day: "오늘", date: "4.26", humidityAm: 10, humidityPm: 10, low: 8,  high: 19, iconAm: DaySun, iconPm: DayClouds },
     { day: "일",   date: "4.27", humidityAm: 0,  humidityPm: 0,  low: 10, high: 20, iconAm: DaySun, iconPm: DayClouds },
