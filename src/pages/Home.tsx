@@ -3,6 +3,8 @@ import { DayClouds } from '../assets';
 import Sidebar from '../components/Sidebar';
 import HourlyForecast from '../components/weather/HourlyForecast';
 import type { Location } from '../types/location';
+import WeatherDisplay from '../components/weather/WeatherDetail';
+import Week from '../components/weather/weeklyWeather/Week';
 
 const Home = () => {
   const locations: Location[] = [
@@ -32,7 +34,14 @@ const Home = () => {
           </div>
         )}
 
-        {selectedLocation && <HourlyForecast location={selectedLocation} />}
+       {selectedLocation && (
+          <div className="flex flex-col items-center gap-8">
+            <WeatherDisplay location={selectedLocation} />
+            <HourlyForecast location={selectedLocation} />
+            <Week location={selectedLocation} />
+          </div>
+)}
+
       </main>
     </div>
   );

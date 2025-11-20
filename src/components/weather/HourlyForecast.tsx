@@ -145,8 +145,8 @@ const HourlyForecast = ({ location }: HourlyForecastProps) => {
     });
   };
   return (
-    <div className="w-4xl h-50 border-2 border-[#F2F2F2] rounded-2xl bg-[#FFFFFF]">
-      <h2 className="text-[20px] font-bold text-black mt-3 ml-5"> {location.name} 시간별 현황</h2>
+    <div className="w-5xl h-50 border-2 border-[#F2F2F2] rounded-2xl bg-[#FFFFFF]">
+      <h2 className="text-[20px] font-bold text-black mt-3 ml-5 p-1.5"> {location.name} 시간별 현황</h2>
       <div className="relative mt-7 mb-4">
         <div className="pointer-events-none absolute inset-x-13 top-1/2 h-px -translate-y-1/2 bg-gray-200" />
 
