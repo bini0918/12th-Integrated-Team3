@@ -32,6 +32,7 @@ const Sidebar = ({
         {/*Css 수정 필요*/}
         <img src={plus} alt="plus" className="w-10 h-10 mt-4" />
         <h2 className="mt-5 mb-8 text-[20px] font-bold pt-1">추가하기</h2>
+
       </div>
       <ul className="pr-2 pl-2 gap-2">
         {locations.map(location => {

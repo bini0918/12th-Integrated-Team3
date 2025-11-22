@@ -5,7 +5,6 @@ import HourlyForecast from '../components/weather/HourlyForecast';
 import WeatherDisplay from '../components/weather/WeatherDetail';
 import Week from '../components/weather/weeklyWeather/Week';
 import type { Location } from '../types/location';
-
 import SearchModal from '../components/modal/SearchModal';
 import useKakaoSearch from '../hooks/useKakaoSearch';
 import DeleteModal from '../components/modal/DeleteModal';
