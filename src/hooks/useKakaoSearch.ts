@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 export default function useKakaoSearch() {
   const [results, setResults] = useState<any[]>([]);
@@ -20,11 +20,11 @@ export default function useKakaoSearch() {
     });
   };
 
-  const reset = () => {
+  const reset = useCallback(() => {
     setKeyword('');
     setResults([]);
     setPagination(null);
-  };
+  }, []);
 
   return {
     keyword,
