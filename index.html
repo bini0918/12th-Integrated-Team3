@@ -8,6 +8,12 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+     
+    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=%VITE_KAKAO_APP_KEY%&libraries=services"></script>
+    <script>
+      window.kakao.maps.load(() => {
+        import('/src/main.tsx');
+      });
+    </script>
   </body>
 </html>
