@@ -10,6 +10,7 @@ import { DayClouds } from '../assets';
 import useKakaoSearch from '../hooks/useKakaoSearch';
 import { useLocationsStore } from '../store/useLocationsStore';
 import { useCurrentWeather, useHourlyWeather, useWeeklyWeather } from '../hooks/useWeatherQueries';
+
 import { fetchLocations } from '../api/location';
 import { createLocation } from '../api/location';
 
@@ -36,7 +37,6 @@ const Home = () => {
 
   // Kakao 검색 hook
   const { keyword, setKeyword, results, pagination, search, reset } = useKakaoSearch();
-
   // 검색 모달 열릴 때 초기화
   useEffect(() => {
     if (isSearchOpen) reset();
