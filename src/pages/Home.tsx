@@ -11,6 +11,8 @@ import useKakaoSearch from '../hooks/useKakaoSearch';
 import { useLocationsStore } from '../store/useLocationsStore';
 import { useCurrentWeather, useHourlyWeather, useWeeklyWeather } from '../hooks/useWeatherQueries';
 
+import { fetchLocations } from '../api/location';
+import { createLocation } from '../api/location';
 
 const Home = () => {
   const {
@@ -28,6 +30,7 @@ const Home = () => {
     closeSearch,
     openDelete,
     closeDelete,
+    setLocations,
   } = useLocationsStore();
 
   const selectedLocation = locations.find(l => l.id === selectedLocationId) ?? null;
@@ -39,21 +42,40 @@ const Home = () => {
     if (isSearchOpen) reset();
   }, [isSearchOpen, reset]);
 
-  /* 카카오에서 장소 선택하면 전역 스토어에 추가 */
-  const handleSelectPlace = (place: any) => {
-    const loc = {
-      // API 구현이 안되어있는줄 알았는데 되어있더라구요....
-      // 장소 등록 바로 구현 해볼게요!
-      id: Date.now(), // 임시 ID
-      name: place.place_name,
-      lat: Number(place.y),
-      lng: Number(place.x),
-      address: place.road_address_name || place.address_name,
-      pinned: false,
-    };
+  useEffect(() => {
+    fetchLocations()
+      .then(data => {
+        setLocations(data.results);
+      })
+      .catch(err => {
+        console.error('위치 목록 불러오기 실패', err);
+      });
+  }, []);
 
-    addLocation(loc);
-    closeSearch();
+  /* 카카오에서 장소 선택하면 전역 스토어에 추가 */
+  const handleSelectPlace = async (place: any) => {
+    try {
+      const placeName = place.place_name;
+      const lat = Number(place.y); // kakao y → lat
+      const lng = Number(place.x); // kakao x → lng
+
+      const result = await createLocation(placeName, lat, lng);
+      const backendId = result.locationId;
+
+      addLocation({
+        id: backendId, // 기존 Date.now → backend가 준 실제 ID
+        name: place.place_name,
+        lat,
+        lng,
+        address: place.road_address_name || place.address_name,
+        pinned: false,
+      });
+
+      closeSearch();
+    } catch (err) {
+      console.error(err);
+      alert('장소 등록 중 오류가 발생했습니다.');
+    }
   };
 
   /** 삭제 확정 */
