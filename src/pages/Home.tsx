@@ -10,6 +10,7 @@ import { DayClouds } from '../assets';
 import useKakaoSearch from '../hooks/useKakaoSearch';
 import { useLocationsStore } from '../store/useLocationsStore';
 import { useCurrentWeather, useHourlyWeather, useWeeklyWeather } from '../hooks/useWeatherQueries';
+
 import {
   useLocationsQuery,
   useAddLocationMutation,

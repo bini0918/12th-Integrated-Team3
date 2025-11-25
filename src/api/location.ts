@@ -13,6 +13,7 @@ export async function createLocation(placeName: string, lat: number, lng: number
       longitude: lng,
     }),
   });
+
   if (!res.ok) throw new Error('장소 생성 실패');
 
   const data = await res.json();
