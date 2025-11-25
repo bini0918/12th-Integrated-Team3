@@ -20,6 +20,7 @@ import {
   useDeleteLocationMutation,
 } from '../hooks/locationHook/useLocationQueries';
 import { kelvinToCelsius } from '../hooks/weatherHook/useWeatherFormat';
+import { useLogout } from '../hooks/useLogout';
 
 const Home = () => {
   const {
@@ -40,6 +41,7 @@ const Home = () => {
   const { data: serverLocations } = useLocationsQuery();
   const addLocationMutation = useAddLocationMutation();
   const deleteLocationMutation = useDeleteLocationMutation();
+  const { logout } = useLogout();
 
   useEffect(() => {
     if (serverLocations) {
@@ -169,6 +171,7 @@ const Home = () => {
         onAddLocation={openSearch}
         onDeleteLocation={openDelete}
         onTogglePin={togglePin}
+        onLogout={logout} // [추가]
       />
 
       <main className="flex flex-1 items-center justify-center p-4">
