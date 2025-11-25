@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchLocations, createLocation, deleteLocation } from '../../api/location';
 import { useLocationsStore } from '../../store/useLocationsStore';
+import { toggleLocationPin } from '../../api/location';
 
 // 1. 위치 목록 조회 Hook
 export function useLocationsQuery() {
@@ -8,7 +9,9 @@ export function useLocationsQuery() {
     queryKey: ['locations'],
     queryFn: async () => {
       const data = await fetchLocations();
-      const mapped = data.results.map((loc: any) => ({
+      const locationsData = Array.isArray(data) ? data : data.results || [];
+      const list = Array.isArray(locationsData) ? locationsData : [];
+      const mapped = list.map((loc: any) => ({
         ...loc,
         id: loc.id ?? loc.locationId,
         name: loc.name ?? loc.placeName,
@@ -70,6 +73,29 @@ export function useDeleteLocationMutation() {
     onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: ['locations'] });
       removeLocation(id);
+    },
+  });
+}
+
+// 4. 핀 토글 Mutation Hook
+export function useTogglePinMutation() {
+  const queryClient = useQueryClient();
+  const { togglePin } = useLocationsStore();
+
+  return useMutation({
+    mutationFn: async ({ id, pinned }: { id: number; pinned: boolean }) => {
+      return toggleLocationPin(id, pinned);
+    },
+    onMutate: async ({ id }) => {
+      togglePin(id);
+    },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({ queryKey: ['locations'] });
+    },
+    onError: (err, { id }) => {
+      console.error('핀 토글 실패:', err);
+      togglePin(id);
+      alert('핀 고정에 실패했습니다.');
     },
   });
 }

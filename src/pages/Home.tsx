@@ -18,6 +18,7 @@ import {
   useLocationsQuery,
   useAddLocationMutation,
   useDeleteLocationMutation,
+  useTogglePinMutation,
 } from '../hooks/locationHook/useLocationQueries';
 import { kelvinToCelsius } from '../hooks/weatherHook/useWeatherFormat';
 import { useLogout } from '../hooks/useLogout';
@@ -35,12 +36,12 @@ const Home = () => {
     openDelete,
     closeDelete,
     setLocations,
-    togglePin,
   } = useLocationsStore();
 
   const { data: serverLocations } = useLocationsQuery();
   const addLocationMutation = useAddLocationMutation();
   const deleteLocationMutation = useDeleteLocationMutation();
+  const togglePinMutation = useTogglePinMutation();
   const { logout } = useLogout();
 
   useEffect(() => {
@@ -161,6 +162,13 @@ const Home = () => {
       icon: r.icon,
     })) ?? [];
 
+  const handleTogglePin = (id: number) => {
+    const target = locations.find(l => l.id === id);
+    if (target) {
+      togglePinMutation.mutate({ id, pinned: !target.pinned });
+    }
+  };
+
   const weeklyItems = weeklyWeatherData?.results ?? [];
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -170,7 +178,7 @@ const Home = () => {
         onSelectLocation={id => selectLocation(selectedLocationId === id ? null : id)}
         onAddLocation={openSearch}
         onDeleteLocation={openDelete}
-        onTogglePin={togglePin}
+        onTogglePin={handleTogglePin}
         onLogout={logout}
       />
 
