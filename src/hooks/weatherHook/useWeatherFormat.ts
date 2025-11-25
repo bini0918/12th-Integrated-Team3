@@ -44,7 +44,6 @@ const conditionMap: Record<string, WeatherCode> = {
   정보없음: 'UNKNOWN',
 };
 
-// 2. 아이콘 매핑
 const iconMap: Record<'day' | 'night', Record<WeatherCode, string>> = {
   day: {
     CLEAR: Icons.DaySun,

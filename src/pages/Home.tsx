@@ -171,7 +171,7 @@ const Home = () => {
         onAddLocation={openSearch}
         onDeleteLocation={openDelete}
         onTogglePin={togglePin}
-        onLogout={logout} // [추가]
+        onLogout={logout}
       />
 
       <main className="flex flex-1 items-center justify-center p-4">
