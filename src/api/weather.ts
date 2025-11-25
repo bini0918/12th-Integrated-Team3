@@ -53,7 +53,6 @@ export async function getCurrentWeather(locationId: number) {
   if (!res.ok) {
     throw new Error(`현재 날씨 조회 실패: ${res.status}`);
   }
-
   return res.json() as Promise<CurrentWeatherApiResponse>;
 }
 
