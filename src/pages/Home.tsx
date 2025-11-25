@@ -21,6 +21,7 @@ import {
 } from '../hooks/locationHook/useLocationQueries';
 import { kelvinToCelsius } from '../hooks/weatherHook/useWeatherFormat';
 
+
 const Home = () => {
   const {
     locations,
@@ -34,6 +35,7 @@ const Home = () => {
     openDelete,
     closeDelete,
     setLocations,
+    setLocations, // 스토어 업데이트용
     togglePin,
   } = useLocationsStore();
 
