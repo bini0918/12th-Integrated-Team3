@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { fetchLocations, createLocation, deleteLocation } from '../api/location';
-import { useLocationsStore } from '../store/useLocationsStore';
+import { fetchLocations, createLocation, deleteLocation } from '../../api/location';
+import { useLocationsStore } from '../../store/useLocationsStore';
 
 // 1. 위치 목록 조회 Hook
 export function useLocationsQuery() {

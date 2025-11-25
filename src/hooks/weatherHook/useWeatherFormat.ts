@@ -1,6 +1,5 @@
-import * as Icons from '../assets';
+import * as Icons from '../../assets';
 
-// 내부 공통 날씨 코드
 export type WeatherCode =
   | 'CLEAR'
   | 'PARTLY_CLOUDY'
@@ -12,35 +11,36 @@ export type WeatherCode =
   | 'WIND'
   | 'UNKNOWN';
 
-// 1. API 상태 → 내부 코드 변환 테이블
 const conditionMap: Record<string, WeatherCode> = {
-  // 영어 기반
   'clear sky': 'CLEAR',
   'few clouds': 'PARTLY_CLOUDY',
   'scattered clouds': 'PARTLY_CLOUDY',
   'broken clouds': 'CLOUDY',
   'overcast clouds': 'OVERCAST',
-
   rain: 'RAIN',
   'light rain': 'RAIN',
   'moderate rain': 'RAIN',
-
   snow: 'SNOW',
   'light snow': 'SNOW',
-
   storm: 'STORM',
   thunderstorm: 'STORM',
-
   wind: 'WIND',
-
-  // 한국어 기반(현재날씨 API)
   맑음: 'CLEAR',
   흐림: 'CLOUDY',
   구름많음: 'PARTLY_CLOUDY',
   비: 'RAIN',
   눈: 'SNOW',
-
-  // 정보 없음
+  이슬비: 'RAIN',
+  천둥번개: 'STORM',
+  '옅은 안개': 'CLOUDY',
+  '짙은 안개': 'OVERCAST',
+  실안개: 'CLOUDY',
+  먼지: 'CLOUDY',
+  황사: 'CLOUDY',
+  연기: 'CLOUDY',
+  화산재: 'CLOUDY',
+  돌풍: 'WIND',
+  토네이도: 'WIND',
   정보없음: 'UNKNOWN',
 };
 
