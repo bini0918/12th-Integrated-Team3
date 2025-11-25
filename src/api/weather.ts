@@ -1,9 +1,6 @@
-// const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE = '/api/v1/weather';
 
 export interface CurrentWeatherApiResponse {
-  code: string;
-  message: string;
-  success: boolean;
   results: {
     temperature: number;
     feelsLike: number;
@@ -21,9 +18,6 @@ export interface CurrentWeatherApiResponse {
 }
 
 export interface HourlyWeatherApiResponse {
-  code: string;
-  message: string;
-  success: boolean;
   results: Array<{
     hour: string;
     temperature: number;
@@ -33,9 +27,6 @@ export interface HourlyWeatherApiResponse {
 }
 
 export interface WeeklyWeatherApiResponse {
-  code: string;
-  message: string;
-  success: boolean;
   results: Array<{
     day: string;
     amCondition: string;
@@ -48,43 +39,53 @@ export interface WeeklyWeatherApiResponse {
     pmHumidity?: number;
   }>;
 }
-//credential 이용
-async function fetchJson<T>(url: string): Promise<T> {
-  const res = await fetch(url, {
-    credentials: 'include',
-  });
-
-  if (!res.ok) {
-    throw new Error(`HTTP Error: ${res.status}`);
-  }
-
-  return res.json() as Promise<T>;
-}
 
 /*
 - 현재 날씨 조회
 -> GET /api/v1/weather/current?locationId={id}
  */
-export function getCurrentWeather(locationId: number) {
-  return fetchJson<CurrentWeatherApiResponse>(`/api/v1/weather/current?locationId=${locationId}`);
+export async function getCurrentWeather(locationId: number) {
+  const res = await fetch(`${BASE}/current?locationId=${locationId}`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  if (!res.ok) {
+    throw new Error(`현재 날씨 조회 실패: ${res.status}`);
+  }
+  return res.json() as Promise<CurrentWeatherApiResponse>;
 }
 
 /*
 - 시간대 날씨 조회
--> GET /api/v1/weather/hourly-status?locationId={id}
+-> GET /api/v1/weather/hourly?locationId={id}
  */
-export function getHourlyWeather(locationId: number) {
-  return fetchJson<HourlyWeatherApiResponse>(
-    `/api/v1/weather/hourly-status?locationId=${locationId}`,
-  );
+export async function getHourlyWeather(locationId: number) {
+  const res = await fetch(`${BASE}/hourly?locationId=${locationId}`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  if (!res.ok) {
+    throw new Error(`시간대 날씨 조회 실패: ${res.status}`);
+  }
+
+  return res.json() as Promise<HourlyWeatherApiResponse>;
 }
 
 /*
 - 주간 날씨 조회
--> GET /api/v1/weather/weekly-status?locationId={id}
+-> GET /api/v1/weather/weekly?locationId={id}
  */
-export function getWeeklyWeather(locationId: number) {
-  return fetchJson<WeeklyWeatherApiResponse>(
-    `/api/v1/weather/weekly-status?locationId=${locationId}`,
-  );
+export async function getWeeklyWeather(locationId: number) {
+  const res = await fetch(`${BASE}/weekly?locationId=${locationId}`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  if (!res.ok) {
+    throw new Error(`주간 날씨 조회 실패: ${res.status}`);
+  }
+
+  return res.json() as Promise<WeeklyWeatherApiResponse>;
 }
