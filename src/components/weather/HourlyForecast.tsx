@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import type { Location } from '../../types/location';
 import { next } from '../../assets';
-//import * as Icons from '../../assets';
 import { mapCondition, isDayTime, getWeatherIcon } from '../../hooks/weatherHook/useWeatherFormat';
 
 type HourItem = {
@@ -16,7 +15,7 @@ type HourlyForecastProps = {
   hours: HourItem[];
 };
 
-const HOURS_PER_PAGE = 8;
+const HOURS_PER_PAGE = 4;
 
 const HourlyForecast = ({ location, hours }: HourlyForecastProps) => {
   const [startIndex, setStartIndex] = useState(0);
@@ -25,13 +24,13 @@ const HourlyForecast = ({ location, hours }: HourlyForecastProps) => {
 
   const handleNext = () => {
     setStartIndex(prev => {
-      const next = prev + HOURS_PER_PAGE;
-      return next >= hours.length ? 0 : next;
+      const nextIdx = prev + HOURS_PER_PAGE;
+      return nextIdx >= hours.length ? 0 : nextIdx;
     });
   };
 
   return (
-    <div className="w-5xl h-50 border-2 border-[#F2F2F2] rounded-2xl bg-[#FFFFFF]">
+    <div className="w-full max-w-5xl border-2 border-[#F2F2F2] rounded-2xl bg-[#FFFFFF]">
       <h2 className="text-[20px] font-bold text-black mt-3 ml-5 p-1.5">
         {location.name} 시간대별 현황
       </h2>
@@ -48,13 +47,9 @@ const HourlyForecast = ({ location, hours }: HourlyForecastProps) => {
         <button
           type="button"
           onClick={handleNext}
-          className="absolute mt-2 right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+          className="absolute mt-2 right-3 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform"
         >
-          <img
-            src={next}
-            alt="next"
-            className="right-3 top-1/2 transform -translate-y-1/2 w-4 h-4"
-          />
+          <img src={next} alt="next" className="w-4 h-4" />
         </button>
       </div>
       <div className="flex items-center justify-between px-10 pb-5">

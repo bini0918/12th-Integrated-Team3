@@ -10,6 +10,7 @@ export default defineConfig({
       '/api': {
         target: 'http://3.34.231.145:8080',
         changeOrigin: true,
+        cookieDomainRewrite: 'localhost',
       },
     },
   },

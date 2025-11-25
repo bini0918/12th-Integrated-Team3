@@ -12,8 +12,8 @@ interface LocationsStore {
   deleteTargetId: number | null;
 
   addLocation: (loc: Location) => void;
-  removeLocation: (id: number) => Promise<void>;
-  togglePin: (id: number) => Promise<void>;
+  removeLocation: (id: number) => void;
+  togglePin: (id: number) => void;
   selectLocation: (id: number | null) => void;
   setLocations: (locations: Location[]) => void;
 
@@ -42,8 +42,7 @@ export const useLocationsStore = create<LocationsStore>((set, get) => ({
     })),
 
   /* 위치 삭제 */
-  removeLocation: async (id: number) => {
-    await deleteLocation(id);
+  removeLocation: (id: number) => {
     set(state => {
       const filtered = state.locations.filter(l => l.id !== id);
       const isRemovedSelected = state.selectedLocationId === id;
