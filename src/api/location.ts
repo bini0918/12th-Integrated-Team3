@@ -16,7 +16,11 @@ export async function createLocation(placeName: string, lat: number, lng: number
 
   if (!res.ok) throw new Error('장소 생성 실패');
 
-  return res.json(); // { locationId: number }
+  const data = await res.json();
+
+  // console.log('장소 생성 응답 데이터:', data);
+
+  return data.results; // { locationId: number }
 }
 
 /** 위치 목록 조회 */
@@ -40,9 +44,13 @@ export async function deleteLocation(id: number) {
 }
 
 /** 핀 토글 */
-export async function toggleLocationPin(id: number) {
-  const res = await fetch(`${BASE}/${id}`, {
+export async function toggleLocationPin(id: number, pinned: boolean) {
+  const res = await fetch(`${BASE}/${id}/pin`, {
     method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      pinned,
+    }),
   });
 
   if (!res.ok) throw new Error('핀 토글 실패');

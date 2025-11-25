@@ -11,8 +11,11 @@ import useKakaoSearch from '../hooks/useKakaoSearch';
 import { useLocationsStore } from '../store/useLocationsStore';
 import { useCurrentWeather, useHourlyWeather, useWeeklyWeather } from '../hooks/useWeatherQueries';
 
-import { fetchLocations } from '../api/location';
-import { createLocation } from '../api/location';
+import {
+  useLocationsQuery,
+  useAddLocationMutation,
+  useDeleteLocationMutation,
+} from '../hooks/useLocationQueries';
 
 const Home = () => {
   const {
@@ -21,19 +24,24 @@ const Home = () => {
     isSearchOpen,
     isDeleteOpen,
     deleteTargetId,
-
-    addLocation,
-    removeLocation,
-    togglePin,
     selectLocation,
     openSearch,
     closeSearch,
     openDelete,
     closeDelete,
-    setLocations,
+    setLocations, // 스토어 업데이트용
+    togglePin,
   } = useLocationsStore();
 
-  const selectedLocation = locations.find(l => l.id === selectedLocationId) ?? null;
+  const { data: serverLocations } = useLocationsQuery();
+  const addLocationMutation = useAddLocationMutation();
+  const deleteLocationMutation = useDeleteLocationMutation();
+
+  useEffect(() => {
+    if (serverLocations) {
+      setLocations(serverLocations);
+    }
+  }, [serverLocations, setLocations]);
 
   // Kakao 검색 hook
   const { keyword, setKeyword, results, pagination, search, reset } = useKakaoSearch();
@@ -42,52 +50,35 @@ const Home = () => {
     if (isSearchOpen) reset();
   }, [isSearchOpen, reset]);
 
-  useEffect(() => {
-    fetchLocations()
-      .then(data => {
-        setLocations(data.results);
-      })
-      .catch(err => {
-        console.error('위치 목록 불러오기 실패', err);
-      });
-  }, []);
+  const handleSelectPlace = (place: any) => {
+    const lat = Number(place.y);
+    const lng = Number(place.x);
+    const placeName = place.place_name;
+    const address = place.road_address_name || place.address_name;
 
-  /* 카카오에서 장소 선택하면 전역 스토어에 추가 */
-  const handleSelectPlace = async (place: any) => {
-    try {
-      const placeName = place.place_name;
-      const lat = Number(place.y); // kakao y → lat
-      const lng = Number(place.x); // kakao x → lng
-
-      const result = await createLocation(placeName, lat, lng);
-      const backendId = result.locationId;
-
-      addLocation({
-        id: backendId, // 기존 Date.now → backend가 준 실제 ID
-        name: place.place_name,
-        lat,
-        lng,
-        address: place.road_address_name || place.address_name,
-        pinned: false,
-      });
-
-      closeSearch();
-    } catch (err) {
-      console.error(err);
-      alert('장소 등록 중 오류가 발생했습니다.');
-    }
+    addLocationMutation.mutate(
+      { placeName, lat, lng, address },
+      {
+        onSuccess: () => {
+          closeSearch(); // 성공 시 모달 닫기
+        },
+      },
+    );
   };
 
   /** 삭제 확정 */
   const confirmDelete = () => {
     if (deleteTargetId !== null) {
-      removeLocation(deleteTargetId);
+      deleteLocationMutation.mutate(deleteTargetId);
     }
     closeDelete();
   };
 
+  const selectedLocation = locations.find(l => l.id === selectedLocationId) ?? null;
   const locationId = selectedLocation?.id;
 
+  // 날씨 데이터 Fetch Hook (locationId가 존재할 때만 실행됨)
+  //따로 훅으로 분리?
   const {
     data: currentWeatherData,
     isLoading: isCurrentLoading,
@@ -105,8 +96,6 @@ const Home = () => {
     isLoading: isWeeklyLoading,
     isError: isWeeklyError,
   } = useWeeklyWeather(locationId);
-
-  // 현재 날씨 → WeatherDisplay로 넘길 props 변환
 
   const weatherDisplayProps = currentWeatherData
     ? {
@@ -147,7 +136,7 @@ const Home = () => {
           {
             id: 'uv',
             label: '자외선',
-            status: '보통', // 추후 백엔드 지원되면 변경, 자외선 데이터가 JSON엔 없었습니다.
+            status: '보통',
           },
           {
             id: 'sunrise',
@@ -158,8 +147,6 @@ const Home = () => {
       }
     : undefined;
 
-  // 시간대 응답 → HourlyForecast로 전달할 데이터
-
   const hourlyItems =
     hourlyWeatherData?.results.map(r => ({
       hour: r.hour,
@@ -167,8 +154,6 @@ const Home = () => {
       condition: r.condition,
       icon: r.icon,
     })) ?? [];
-
-  // 주간 예보 → Week 컴포넌트로 그대로 전달
 
   const weeklyItems = weeklyWeatherData?.results ?? [];
 
@@ -183,10 +168,10 @@ const Home = () => {
         onTogglePin={togglePin}
       />
 
-      <main className="flex flex-1 items-center justify-center">
+      <main className="flex flex-1 items-center justify-center p-4">
         {!selectedLocation && (
           <div className="text-center">
-            <img className="mb-5 h-80 w-80" src={DayClouds} />
+            <img className="mb-5 h-80 w-80 mx-auto" src={DayClouds} alt="기본 배경" />
             <p className="text-4xl font-bold text-black">아직 선택된 위치가 없습니다!</p>
           </div>
         )}

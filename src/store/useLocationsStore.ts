@@ -55,40 +55,44 @@ export const useLocationsStore = create<LocationsStore>((set, get) => ({
     });
   },
 
-  /* 핀 토글 */
   togglePin: async (id: number) => {
-    // 1. 롤백을 위해 현재 상태 스냅샷 저장
     const previousLocations = get().locations;
 
-    // 2. 낙관적 업데이트 (UI 먼저 변경)
+    const targetLocation = previousLocations.find(l => l.id === id);
+    if (!targetLocation) return; // 예외 처리
+
+    const nextPinnedStatus = !(targetLocation.pinned ?? false);
+
     set(state => {
       const updatedLocations = state.locations.map(l =>
-        l.id === id ? { ...l, pinned: !l.pinned } : l,
+        l.id === id ? { ...l, pinned: nextPinnedStatus } : l,
       );
-
-      // 3. 정렬 로직: 핀 고정된 항목(true)을 리스트 최상단으로 보냄
-      updatedLocations.sort((a, b) => Number(b.pinned) - Number(a.pinned));
+      updatedLocations.sort((a, b) => Number(b.pinned ?? false) - Number(a.pinned ?? false));
 
       return { locations: updatedLocations };
     });
 
     try {
-      // 4. API 요청 전송
-      await toggleLocationPin(id);
+      await toggleLocationPin(id, nextPinnedStatus);
     } catch (error) {
       console.error('핀 고정 실패:', error);
 
-      // 5. 실패 시 이전 상태로 원상복구 (롤백)
       set({ locations: previousLocations });
     }
   },
-
   /* 선택 변경 */
   selectLocation: id => set({ selectedLocationId: id }),
 
-  /* 서버에서 불러온 초깃값 위치 설정 */
-  setLocations: (locations: Location[]) => set({ locations }),
+  setLocations: (locations: Location[]) => {
+    // 핀 고정(true)된 항목이 위로 오도록 정렬
+    const sortedLocations = [...locations].sort((a, b) => {
+      const pinnedA = Number(a.pinned ?? false);
+      const pinnedB = Number(b.pinned ?? false);
+      return pinnedB - pinnedA;
+    });
 
+    set({ locations: sortedLocations });
+  },
   /* 검색 모달 제어 */
   openSearch: () => set({ isSearchOpen: true }),
   closeSearch: () => set({ isSearchOpen: false }),

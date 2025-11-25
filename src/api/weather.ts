@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+// const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export interface CurrentWeatherApiResponse {
   code: string;
@@ -66,9 +66,7 @@ async function fetchJson<T>(url: string): Promise<T> {
 -> GET /api/v1/weather/current?locationId={id}
  */
 export function getCurrentWeather(locationId: number) {
-  return fetchJson<CurrentWeatherApiResponse>(
-    `${API_BASE_URL}/api/v1/weather/current?locationId=${locationId}`,
-  );
+  return fetchJson<CurrentWeatherApiResponse>(`/api/v1/weather/current?locationId=${locationId}`);
 }
 
 /*
@@ -77,7 +75,7 @@ export function getCurrentWeather(locationId: number) {
  */
 export function getHourlyWeather(locationId: number) {
   return fetchJson<HourlyWeatherApiResponse>(
-    `${API_BASE_URL}/api/v1/weather/hourly-status?locationId=${locationId}`,
+    `/api/v1/weather/hourly-status?locationId=${locationId}`,
   );
 }
 
@@ -87,6 +85,6 @@ export function getHourlyWeather(locationId: number) {
  */
 export function getWeeklyWeather(locationId: number) {
   return fetchJson<WeeklyWeatherApiResponse>(
-    `${API_BASE_URL}/api/v1/weather/weekly-status?locationId=${locationId}`,
+    `/api/v1/weather/weekly-status?locationId=${locationId}`,
   );
 }

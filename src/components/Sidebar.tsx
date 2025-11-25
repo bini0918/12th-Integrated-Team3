@@ -4,10 +4,8 @@ type SidebarProps = {
   locations: Location[];
   selectedLocationId: number | null;
   onSelectLocation: (id: number) => void;
-  onAddLocation: () => void;
-  //삭제
-  onDeleteLocation?: (id: number) => void;
-  //핀 고정 토글
+  onAddLocation: () => void; //삭제
+  onDeleteLocation?: (id: number) => void; //핀 고정 토글
   onTogglePin: (id: number) => void;
 };
 
@@ -26,15 +24,14 @@ const Sidebar = ({
         <h2 className="mb-10 text-[20px] font-bold pt-1">위치 목록</h2>
       </div>
       <div
-        className="flex gap-4 cursor-pointer mb-6 h-auto hover:bg-gray-100"
+        className="flex items-center gap-4 cursor-pointer mb-6 h-auto hover:bg-gray-100"
         onClick={onAddLocation}
       >
         {/*Css 수정 필요*/}
         <img src={plus} alt="plus" className="w-10 h-10 mt-4" />
         <h2 className="mt-5 mb-8 text-[20px] font-bold pt-1">추가하기</h2>
-
       </div>
-      <ul className="pr-2 pl-2 gap-2">
+      <ul className="flex flex-col pr-2 pl-2 gap-2">
         {locations.map(location => {
           const isActive = location.id === selectedLocationId;
 
