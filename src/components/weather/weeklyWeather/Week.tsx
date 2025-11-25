@@ -1,8 +1,7 @@
 import WeatherCard from './dayCard';
-// import { DayClouds, DaySun } from '../../../assets';
 import type { Location } from '../../../types/location';
 import type { WeeklyWeatherApiResponse } from '../../../api/weather';
-import { mapCondition, getWeatherIcon } from '../../../hooks/useWeatherFormat';
+import { mapCondition, getWeatherIcon } from '../../../hooks/weatherHook/useWeatherFormat';
 
 interface WeekProps {
   location: Location;
@@ -10,69 +9,17 @@ interface WeekProps {
 }
 
 const Week = ({ location, days }: WeekProps) => {
-  // API 데이터가 있으면 그걸 사용, 없으면 기존 더미 유지
-  // const fallback = [
-  //   {
-  //     day: '오늘',
-  //     date: '4.26',
-  //     humidityAm: 10,
-  //     humidityPm: 10,
-  //     low: 8,
-  //     high: 19,
-  //     iconAm: DaySun,
-  //     iconPm: DayClouds,
-  //   },
-  //   {
-  //     day: '일',
-  //     date: '4.27',
-  //     humidityAm: 0,
-  //     humidityPm: 0,
-  //     low: 10,
-  //     high: 20,
-  //     iconAm: DaySun,
-  //     iconPm: DayClouds,
-  //   },
-  //   {
-  //     day: '월',
-  //     date: '4.28',
-  //     humidityAm: 0,
-  //     humidityPm: 0,
-  //     low: 9,
-  //     high: 20,
-  //     iconAm: DaySun,
-  //     iconPm: DayClouds,
-  //   },
-  //   {
-  //     day: '화',
-  //     date: '4.29',
-  //     humidityAm: 0,
-  //     humidityPm: 40,
-  //     low: 8,
-  //     high: 19,
-  //     iconAm: DaySun,
-  //     iconPm: DayClouds,
-  //   },
-  //   {
-  //     day: '수',
-  //     date: '4.30',
-  //     humidityAm: 10,
-  //     humidityPm: 10,
-  //     low: 12,
-  //     high: 22,
-  //     iconAm: DaySun,
-  //     iconPm: DayClouds,
-  //   },
-  // ];
-
   const hasData = days && days.length > 0;
 
+  const fiveDays = hasData ? days.slice(0, 5) : [];
+
   const mapped = hasData
-    ? days.map(d => {
+    ? fiveDays.map(d => {
         const amCode = mapCondition(d.amCondition);
         const pmCode = mapCondition(d.pmCondition);
 
-        const amIcon = getWeatherIcon(amCode, true); // 오전 → 낮으로 처리
-        const pmIcon = getWeatherIcon(pmCode, false); // 오후 → 밤
+        const amIcon = getWeatherIcon(amCode, true);
+        const pmIcon = getWeatherIcon(pmCode, false);
 
         return {
           day: d.day,
@@ -88,15 +35,17 @@ const Week = ({ location, days }: WeekProps) => {
 
   return (
     <div className="w-5xl border-2 border-[#F2F2F2] rounded-2xl bg-[#FFFFFF] p-6 mb-8">
-      <h2 className="text-[20px] font-bold text-black mb-3">{location.name} 주간 예보</h2>
-
-      {!hasData && <p className="text-center text-gray-500">주간 예보 데이터가 없습니다.</p>}
+      <h2 className="text-[20px] font-bold text-black mb-3 ml-1">{location.name} 주간 예보</h2>
 
       {!hasData && (
-        <div className="flex items-end justify-between">
+        <div className="py-10 text-center text-gray-500">주간 예보 데이터가 없습니다.</div>
+      )}
+
+      {hasData && (
+        <div className="flex items-end justify-between overflow-x-auto pb-2">
           {mapped.map((item, idx) => (
-            <div key={idx} className="flex flex-col items-center">
-              <div className="flex gap-2">
+            <div key={`${item.day}-${idx}`} className="flex flex-col items-center min-w-[100px]">
+              <div className="flex gap-1">
                 <WeatherCard
                   icon={item.iconAm}
                   humidity={item.humidityAm}
@@ -111,8 +60,8 @@ const Week = ({ location, days }: WeekProps) => {
                 />
               </div>
 
-              <div className="flex flex-col items-center gap-0.5">
-                <span className="text-sm font-normal text-gray-700">{item.day}</span>
+              <div className="flex flex-col items-center mt-3">
+                <span className="text-sm font-medium text-gray-700">{item.day}</span>
               </div>
             </div>
           ))}
