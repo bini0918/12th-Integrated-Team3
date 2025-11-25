@@ -13,7 +13,7 @@ interface AuthFormProps {
 }
 
 const AuthForm = ({ mode, action }: AuthFormProps) => {
-  const { email, password, setEmail, setPassword, reset } = useAuthStore();
+  const { email, password, setEmail, setPassword, resetForm } = useAuthStore();
 
   const [state, formAction, isPending] = useActionState(action, {
     success: false,
@@ -21,9 +21,9 @@ const AuthForm = ({ mode, action }: AuthFormProps) => {
   });
 
   useEffect(() => {
-    reset();
-    return () => reset();
-  }, [reset]);
+    resetForm();
+    return () => resetForm();
+  }, [resetForm]);
 
   useEffect(() => {
     if (state.message && !state.success) {

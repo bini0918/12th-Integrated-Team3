@@ -8,7 +8,9 @@ export function useLogout() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const resetAuth = useAuthStore(state => state.reset);
+  const logoutFromStore = useAuthStore(state => state.logout);
+  const resetForm = useAuthStore(state => state.resetForm);
+
   const setLocations = useLocationsStore(state => state.setLocations);
 
   const logout = async () => {
@@ -19,9 +21,9 @@ export function useLogout() {
     } finally {
       queryClient.clear();
 
-      resetAuth();
-      setLocations([]); // 위치 목록 상태 비우기
-
+      logoutFromStore();
+      resetForm();
+      setLocations([]);
       navigate('/');
     }
   };
