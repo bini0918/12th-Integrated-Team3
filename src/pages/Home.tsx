@@ -7,14 +7,19 @@ import SearchModal from '../components/modal/SearchModal';
 import DeleteModal from '../components/modal/DeleteModal';
 import { DayClouds } from '../assets';
 
-import useKakaoSearch from '../hooks/useKakaoSearch';
+import useKakaoSearch from '../hooks/locationHook/useKakaoSearch';
 import { useLocationsStore } from '../store/useLocationsStore';
-import { useCurrentWeather, useHourlyWeather, useWeeklyWeather } from '../hooks/useWeatherQueries';
+import {
+  useCurrentWeather,
+  useHourlyWeather,
+  useWeeklyWeather,
+} from '../hooks/weatherHook/useWeatherQueries';
 import {
   useLocationsQuery,
   useAddLocationMutation,
   useDeleteLocationMutation,
-} from '../hooks/useLocationQueries';
+} from '../hooks/locationHook/useLocationQueries';
+import { kelvinToCelsius } from '../hooks/weatherHook/useWeatherFormat';
 
 const Home = () => {
   const {
@@ -28,7 +33,7 @@ const Home = () => {
     closeSearch,
     openDelete,
     closeDelete,
-    setLocations, // 스토어 업데이트용
+    setLocations,
     togglePin,
   } = useLocationsStore();
 
@@ -149,13 +154,12 @@ const Home = () => {
   const hourlyItems =
     hourlyWeatherData?.results.map(r => ({
       hour: r.hour,
-      tempC: r.temperature,
+      tempC: kelvinToCelsius(r.temperature),
       condition: r.condition,
       icon: r.icon,
     })) ?? [];
 
   const weeklyItems = weeklyWeatherData?.results ?? [];
-
   return (
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar
