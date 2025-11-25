@@ -16,6 +16,7 @@ const conditionMap: Record<string, WeatherCode> = {
   'few clouds': 'PARTLY_CLOUDY',
   'scattered clouds': 'PARTLY_CLOUDY',
   'broken clouds': 'CLOUDY',
+  'shower rain': 'RAIN',
   'overcast clouds': 'OVERCAST',
   rain: 'RAIN',
   'light rain': 'RAIN',
@@ -80,8 +81,7 @@ export function mapCondition(raw: string | undefined | null): WeatherCode {
 // 4. 시간 기반 day/night 판단
 export function isDayTime(hourString: string): boolean {
   // "18시" → 18
-  const hour = parseInt(hourString.replace('시', ''), 10);
-
+  const hour = parseInt(hourString.replace(/[^0-9]/g, ''), 10);
   return hour >= 6 && hour < 18; // 06~17 → Day, 나머지 → Night
 }
 
