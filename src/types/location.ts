@@ -4,6 +4,5 @@ export type Location = {
   lat?: number;
   lng?: number;
   address?: string;
-  // pinned 속성 추가
   pinned?: boolean;
 };
