@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { DayWind, close, check, search } from '../../assets';
+import { motion } from 'framer-motion';
 
 interface Place {
   id: string;
@@ -31,8 +32,6 @@ export default function SearchModal({
   onSelect,
   onClose,
 }: Props) {
-  if (!open) return null;
-
   // 선택된 장소 관리
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
 
@@ -53,8 +52,20 @@ export default function SearchModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-[#292E2E]/60 flex items-center justify-center z-50">
-      <div className="bg-white w-[90%] max-w-xl rounded-2xl p-10 shadow-xl relative">
+    <motion.div
+      className="fixed inset-0 bg-[#292E2E]/60 flex items-center justify-center z-50"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25, ease: 'easeInOut' }}
+    >
+      <motion.div
+        className="bg-white w-[90%] max-w-xl rounded-2xl p-8 shadow-xl relative"
+        initial={{ opacity: 0, y: 16, scale: 0.96 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 16, scale: 0.96 }}
+        transition={{ duration: 0.25, ease: 'easeInOut' }}
+      >
         {/* 상단 아이콘 + 타이틀 */}
         <div className="flex items-start gap-3 mb-4">
           <img src={DayWind} alt="날씨 아이콘" className="w-20 h-20 mr-2" />
@@ -92,12 +103,12 @@ export default function SearchModal({
           </button>
         </div>
 
-        <hr className="border border-gray-300 mb-20" />
+        <hr className="border border-gray-300 mb-10" />
 
         {/* 검색 결과 */}
         <div className="border-2 border-[#A4A4A4] rounded-xl overflow-hidden">
           <ul>
-            {results.slice(0, 5).map(p => (
+            {results.slice(0, 3).map(p => (
               <li
                 key={p.id}
                 className="flex items-center justify-between px-4 py-4 border-b last:border-none hover:bg-[#F6F6F6] transition cursor-pointer"
@@ -157,7 +168,7 @@ export default function SearchModal({
             확인
           </button>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

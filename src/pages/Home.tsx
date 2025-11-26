@@ -17,6 +17,7 @@ import {
   useTogglePinMutation,
 } from '../hooks/locationHook/useLocationQueries';
 import { useLogout } from '../hooks/useLogout';
+import { AnimatePresence } from 'framer-motion';
 
 const Home = () => {
   // 1. UI 상태 (Zustand)
@@ -117,25 +118,33 @@ const Home = () => {
         )}
       </main>
 
-      <SearchModal
-        open={isSearchOpen}
-        keyword={keyword}
-        results={results}
-        pagination={pagination}
-        onChangeKeyword={setKeyword}
-        onSearch={search}
-        onSelect={handleSelectPlace}
-        onClose={closeSearch}
-      />
+      <AnimatePresence>
+        {isSearchOpen && (
+          <SearchModal
+            open={isSearchOpen}
+            keyword={keyword}
+            results={results}
+            pagination={pagination}
+            onChangeKeyword={setKeyword}
+            onSearch={search}
+            onSelect={handleSelectPlace}
+            onClose={closeSearch}
+          />
+        )}
+      </AnimatePresence>
 
-      <DeleteModal
-        open={isDeleteOpen}
-        locationName={
-          deleteTargetId ? locations.find(l => l.id === deleteTargetId)?.name : undefined
-        }
-        onCancel={closeDelete}
-        onConfirm={confirmDelete}
-      />
+      <AnimatePresence>
+        {isDeleteOpen && (
+          <DeleteModal
+            open={isDeleteOpen}
+            locationName={
+              deleteTargetId ? locations.find(l => l.id === deleteTargetId)?.name : undefined
+            }
+            onCancel={closeDelete}
+            onConfirm={confirmDelete}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
