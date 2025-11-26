@@ -1,7 +1,14 @@
-import { useState } from 'react';
 import type { Location } from '../../types/location';
-import { next } from '../../assets';
 import { mapCondition, isDayTime, getWeatherIcon } from '../../hooks/weatherHook/useWeatherFormat';
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+} from 'recharts';
 
 type HourItem = {
   hour: string;
@@ -15,57 +22,88 @@ type HourlyForecastProps = {
   hours: HourItem[];
 };
 
-const HOURS_PER_PAGE = 4;
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white/90 p-2 border border-gray-100 rounded-lg shadow-sm text-xs">
+        <p className="font-semibold mb-1">{label}</p>
+        <p className="text-blue-600 font-bold">{payload[0].value}°C</p>
+      </div>
+    );
+  }
+  return null;
+};
 
-const HourlyForecast = ({ location, hours }: HourlyForecastProps) => {
-  const [startIndex, setStartIndex] = useState(0);
+const CustomTick = ({ x, y, payload, hours }: any) => {
+  const hourData = hours[payload.index];
+  if (!hourData) return null;
 
-  const visibleHours = hours.slice(startIndex, startIndex + HOURS_PER_PAGE);
-
-  const handleNext = () => {
-    setStartIndex(prev => {
-      const nextIdx = prev + HOURS_PER_PAGE;
-      return nextIdx >= hours.length ? 0 : nextIdx;
-    });
-  };
+  const code = mapCondition(hourData.condition);
+  const dayFlag = isDayTime(hourData.hour);
+  const icon = getWeatherIcon(code, dayFlag);
 
   return (
-    <div className="w-full max-w-5xl border-2 border-[#F2F2F2] rounded-2xl bg-[#FFFFFF]">
-      <h2 className="text-[20px] font-bold text-black mt-3 ml-5 p-1.5">
-        {location.name} 시간대별 현황
+    <g transform={`translate(${x},${y})`}>
+      <image x={-12} y={0} href={icon} width={24} height={24} />
+      <text x={0} y={35} dy={0} textAnchor="middle" fill="#666" fontSize={12}>
+        {payload.value}
+      </text>
+    </g>
+  );
+};
+
+const HourlyForecast = ({ location, hours }: HourlyForecastProps) => {
+  const chartData = hours.map(h => ({
+    ...h,
+    temp: h.tempC,
+  }));
+
+  return (
+    <div className="w-5xl border-2 border-[#F2F2F2] rounded-2xl bg-white overflow-hidden">
+      <h2 className="text-[20px] font-bold text-black mt-4 ml-6 mb-2">
+        {location.name} 시간대별 기온
       </h2>
-      <div className="relative mt-7 mb-4">
-        <div className="pointer-events-none absolute inset-x-13 top-1/2 h-px -translate-y-1/2 bg-gray-200" />
 
-        <div className="flex items-center justify-between px-13">
-          {visibleHours.map(h => (
-            <div key={h.hour} className="flex flex-col items-center">
-              <div className="z-10 h-2 w-2 rounded-full bg-gray-300" />
-            </div>
-          ))}
+      <div className="w-full h-[250px] px-4 pb-2 overflow-x-auto scrollbar-hide">
+        <div className="min-w-[600px] h-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={chartData} margin={{ top: 20, right: 20, left: 20, bottom: 40 }}>
+              <defs>
+                <linearGradient id="colorTemp" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#2D7DFF" stopOpacity={0.2} />
+                  <stop offset="95%" stopColor="#2D7DFF" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+
+              <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#f0f0f0" />
+
+              <XAxis
+                dataKey="hour"
+                axisLine={false}
+                tickLine={false}
+                tick={<CustomTick hours={hours} />}
+                interval={0}
+              />
+
+              <YAxis hide={true} domain={['dataMin - 2', 'dataMax + 2']} />
+
+              <Tooltip
+                content={<CustomTooltip />}
+                cursor={{ stroke: '#2D7DFF', strokeWidth: 1, strokeDasharray: '5 5' }}
+              />
+
+              <Area
+                type="monotone"
+                dataKey="temp"
+                stroke="#2D7DFF"
+                strokeWidth={3}
+                fillOpacity={1}
+                fill="url(#colorTemp)"
+                animationDuration={1000}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
-        <button
-          type="button"
-          onClick={handleNext}
-          className="absolute mt-2 right-3 top-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform"
-        >
-          <img src={next} alt="next" className="w-4 h-4" />
-        </button>
-      </div>
-      <div className="flex items-center justify-between px-10 pb-5">
-        {visibleHours.map(h => {
-          const code = mapCondition(h.condition);
-          const dayFlag = isDayTime(h.hour);
-          const icon = getWeatherIcon(code, dayFlag);
-
-          return (
-            <div key={h.hour} className="flex flex-col items-center gap-1">
-              <img src={icon} alt={h.condition} className="w-8 h-8" />
-              <div className="text-xs text-gray-500">{h.hour}</div>
-              <div className="text-xs font-semibold text-gray-700">{h.tempC}°</div>
-            </div>
-          );
-        })}
       </div>
     </div>
   );
