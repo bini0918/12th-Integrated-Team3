@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { logout as logoutApi } from '../api/auth';
 import { useAuthStore } from '../store/useAuthStore';
-import { useLocationsStore } from '../store/useLocationsStore';
 
 export function useLogout() {
   const navigate = useNavigate();
@@ -10,8 +9,6 @@ export function useLogout() {
 
   const logoutFromStore = useAuthStore(state => state.logout);
   const resetForm = useAuthStore(state => state.resetForm);
-
-  const setLocations = useLocationsStore(state => state.setLocations);
 
   const logout = async () => {
     try {
@@ -23,7 +20,6 @@ export function useLogout() {
 
       logoutFromStore();
       resetForm();
-      setLocations([]);
       navigate('/');
     }
   };
