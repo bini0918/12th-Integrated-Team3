@@ -1,5 +1,4 @@
 // src/api/auth.ts
-
 const USER_BASE = '/api/v1/user';
 
 export interface UserResponse {
@@ -26,7 +25,8 @@ async function fetchJson<T>(url: string, init?: RequestInit): Promise<T> {
   return text ? JSON.parse(text) : ({} as T);
 }
 
-/*로그인
+/*
+로그인
 POST /api/v1/user/login
 */
 export function login(email: string, password: string) {
@@ -36,7 +36,8 @@ export function login(email: string, password: string) {
   });
 }
 
-/*회원가입
+/*
+회원가입
 POST /api/v1/user/sign-up
 */
 export function signup(email: string, password: string) {
@@ -46,7 +47,8 @@ export function signup(email: string, password: string) {
   });
 }
 
-/*로그아웃
+/*
+로그아웃
 POST /api/v1/user/logout
 */
 export function logout() {

@@ -23,13 +23,7 @@ const AuthForm = ({ mode, action }: AuthFormProps) => {
   useEffect(() => {
     resetForm();
     return () => resetForm();
-  }, [resetForm]);
-
-  useEffect(() => {
-    if (state.message && !state.success) {
-      alert(state.message);
-    }
-  }, [state]);
+  }, [resetForm, mode]);
 
   const isLogin = mode === 'login';
   const buttonText = isPending ? '처리 중...' : isLogin ? '로그인' : '가입하기';
@@ -46,6 +40,7 @@ const AuthForm = ({ mode, action }: AuthFormProps) => {
             <input
               name="email"
               type="email"
+              autoComplete="username"
               placeholder="이메일을 입력해 주세요"
               value={email}
               onChange={e => setEmail(e.target.value)}
@@ -60,6 +55,7 @@ const AuthForm = ({ mode, action }: AuthFormProps) => {
               <input
                 name="password"
                 type="password"
+                autoComplete={isLogin ? 'current-password' : 'new-password'}
                 placeholder="비밀번호를 입력해주세요"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
@@ -68,6 +64,9 @@ const AuthForm = ({ mode, action }: AuthFormProps) => {
               />
             </div>
           </div>
+          {state.message && !state.success && (
+            <div className="mb-4 text-sm text-red-500 font-medium text-center">{state.message}</div>
+          )}
 
           <button
             type="submit"

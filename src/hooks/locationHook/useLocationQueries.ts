@@ -1,7 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { fetchLocations, createLocation, deleteLocation } from '../../api/location';
-import { useLocationsStore } from '../../store/useLocationsStore';
-import { toggleLocationPin } from '../../api/location';
+import {
+  fetchLocations,
+  createLocation,
+  deleteLocation,
+  toggleLocationPin,
+} from '../../api/location';
 
 // 1. 위치 목록 조회 Hook
 export function useLocationsQuery() {
@@ -11,6 +14,7 @@ export function useLocationsQuery() {
       const data = await fetchLocations();
       const locationsData = Array.isArray(data) ? data : data.results || [];
       const list = Array.isArray(locationsData) ? locationsData : [];
+
       const mapped = list.map((loc: any) => ({
         ...loc,
         id: loc.id ?? loc.locationId,
@@ -28,7 +32,6 @@ export function useLocationsQuery() {
 // 2. 위치 등록 Mutation Hook
 export function useAddLocationMutation() {
   const queryClient = useQueryClient();
-  const { addLocation } = useLocationsStore();
 
   return useMutation({
     mutationFn: async (params: {
@@ -44,17 +47,8 @@ export function useAddLocationMutation() {
 
       return { ...params, id: newId };
     },
-    onSuccess: newLocation => {
-      queryClient.invalidateQueries({ queryKey: ['locations'] });
-
-      addLocation({
-        id: newLocation.id,
-        name: newLocation.placeName,
-        lat: newLocation.lat,
-        lng: newLocation.lng,
-        address: newLocation.address,
-        pinned: false,
-      });
+    onSuccess: () => {
+      return queryClient.invalidateQueries({ queryKey: ['locations'] });
     },
     onError: err => {
       console.error('장소 추가 실패:', err);
@@ -66,13 +60,15 @@ export function useAddLocationMutation() {
 // 3. 위치 삭제 Mutation Hook
 export function useDeleteLocationMutation() {
   const queryClient = useQueryClient();
-  const { removeLocation } = useLocationsStore();
 
   return useMutation({
     mutationFn: (id: number) => deleteLocation(id),
-    onSuccess: (_, id) => {
-      queryClient.invalidateQueries({ queryKey: ['locations'] });
-      removeLocation(id);
+    onSuccess: () => {
+      return queryClient.invalidateQueries({ queryKey: ['locations'] });
+    },
+    onError: err => {
+      console.error('장소 삭제 실패:', err);
+      alert('장소 삭제 중 오류가 발생했습니다.');
     },
   });
 }
@@ -80,21 +76,16 @@ export function useDeleteLocationMutation() {
 // 4. 핀 토글 Mutation Hook
 export function useTogglePinMutation() {
   const queryClient = useQueryClient();
-  const { togglePin } = useLocationsStore();
 
   return useMutation({
     mutationFn: async ({ id, pinned }: { id: number; pinned: boolean }) => {
       return toggleLocationPin(id, pinned);
     },
-    onMutate: async ({ id }) => {
-      togglePin(id);
-    },
     onSuccess: () => {
       return queryClient.invalidateQueries({ queryKey: ['locations'] });
     },
-    onError: (err, { id }) => {
+    onError: err => {
       console.error('핀 토글 실패:', err);
-      togglePin(id);
       alert('핀 고정에 실패했습니다.');
     },
   });
