@@ -1,4 +1,5 @@
 import { DayClouds } from '../../assets';
+import { motion } from 'framer-motion';
 
 interface DeleteConfirmModalProps {
   open: boolean;
@@ -16,8 +17,20 @@ export default function DeleteModal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex flex-col items-center justify-center z-50 text-center">
-      <div className="bg-white w-auto rounded-xl px-27 py-9 shadow-xl">
+    <motion.div
+      className="fixed inset-0 bg-[#292E2E]/60 flex items-center justify-center z-50"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25, ease: 'easeInOut' }}
+    >
+      <motion.div
+        className="bg-white w-[90%] max-w-md rounded-2xl p-8 shadow-xl relative text-center"
+        initial={{ opacity: 0, y: 16, scale: 0.96 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 16, scale: 0.96 }}
+        transition={{ duration: 0.25, ease: 'easeInOut' }}
+      >
         <h2 className="text-3xl font-semibold mb-6">정말로 삭제하시겠습니까?</h2>
         <img src={DayClouds} alt="삭제 할거예요?" className="w-40 h-40 mb-6 mx-auto" />
         <p className="text-sm text-gray-600 mb-6">
@@ -39,7 +52,7 @@ export default function DeleteModal({
             삭제하기
           </button>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
