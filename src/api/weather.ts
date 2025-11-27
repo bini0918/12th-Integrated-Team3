@@ -1,4 +1,5 @@
 const BASE = '/api/v1/weather';
+import { fetchJson } from './client';
 
 export interface CurrentWeatherApiResponse {
   results: {
@@ -45,15 +46,9 @@ export interface WeeklyWeatherApiResponse {
 -> GET /api/v1/weather/current?locationId={id}
  */
 export async function getCurrentWeather(locationId: number) {
-  const res = await fetch(`${BASE}/current?locationId=${locationId}`, {
+  return fetchJson<CurrentWeatherApiResponse>(`${BASE}/current?locationId=${locationId}`, {
     method: 'GET',
-    credentials: 'include',
   });
-
-  if (!res.ok) {
-    throw new Error(`현재 날씨 조회 실패: ${res.status}`);
-  }
-  return res.json() as Promise<CurrentWeatherApiResponse>;
 }
 
 /*
@@ -61,16 +56,9 @@ export async function getCurrentWeather(locationId: number) {
 -> GET /api/v1/weather/hourly?locationId={id}
  */
 export async function getHourlyWeather(locationId: number) {
-  const res = await fetch(`${BASE}/hourly?locationId=${locationId}`, {
+  return fetchJson<HourlyWeatherApiResponse>(`${BASE}/hourly?locationId=${locationId}`, {
     method: 'GET',
-    credentials: 'include',
   });
-
-  if (!res.ok) {
-    throw new Error(`시간대 날씨 조회 실패: ${res.status}`);
-  }
-
-  return res.json() as Promise<HourlyWeatherApiResponse>;
 }
 
 /*
@@ -78,14 +66,7 @@ export async function getHourlyWeather(locationId: number) {
 -> GET /api/v1/weather/weekly?locationId={id}
  */
 export async function getWeeklyWeather(locationId: number) {
-  const res = await fetch(`${BASE}/weekly?locationId=${locationId}`, {
+  return fetchJson<WeeklyWeatherApiResponse>(`${BASE}/weekly?locationId=${locationId}`, {
     method: 'GET',
-    credentials: 'include',
   });
-
-  if (!res.ok) {
-    throw new Error(`주간 날씨 조회 실패: ${res.status}`);
-  }
-
-  return res.json() as Promise<WeeklyWeatherApiResponse>;
 }
