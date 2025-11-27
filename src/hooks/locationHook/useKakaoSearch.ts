@@ -5,20 +5,25 @@ export default function useKakaoSearch() {
   const [keyword, setKeyword] = useState('');
   const [pagination, setPagination] = useState<any>(null);
 
-  const search = () => {
-    const { kakao } = window;
-    const ps = new kakao.maps.services.Places();
+  const search = useCallback(() => {
+    // 1) SDK 로드 확인
+    if (!window.kakao || !window.kakao.maps?.services) {
+      console.warn('Kakao Maps SDK가 아직 로드되지 않았습니다.');
+      return;
+    }
 
-    ps.keywordSearch(keyword, (data: any, status: any, pagination: any) => {
-      if (status === kakao.maps.services.Status.OK) {
+    const ps = new window.kakao.maps.services.Places(); // 2) 검색 요청
+
+    ps.keywordSearch(keyword, (data: any, status: any, paginationObj: any) => {
+      if (status === window.kakao.maps.services.Status.OK) {
         setResults(data);
-        setPagination(pagination);
+        setPagination(paginationObj);
       } else {
         setResults([]);
         setPagination(null);
       }
     });
-  };
+  }, [keyword]);
 
   const reset = useCallback(() => {
     setKeyword('');
