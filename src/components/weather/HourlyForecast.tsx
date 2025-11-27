@@ -61,7 +61,7 @@ const HourlyForecast = ({ location, hours }: HourlyForecastProps) => {
   return (
     <div className="w-5xl border-2 border-[#F2F2F2] rounded-2xl bg-white overflow-hidden">
       <h2 className="text-[20px] font-bold text-black mt-4 ml-6 mb-2">
-        {location.name} 시간대별 기온
+        {location.name} 시간별 현황
       </h2>
 
       <div className="w-full h-[250px] px-4 pb-2 overflow-x-auto scrollbar-hide">

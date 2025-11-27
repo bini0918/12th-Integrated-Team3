@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { NightClouds } from '../../assets';
+// import { NightClouds } from '../../assets';
 import type { Location } from '../../types/location';
 import { mapCondition, getWeatherIcon } from '../../hooks/weatherHook/useWeatherFormat';
 
