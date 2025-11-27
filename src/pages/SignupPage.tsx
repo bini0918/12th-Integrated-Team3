@@ -13,8 +13,8 @@ const SignupPage = () => {
     try {
       const response = await signup(email, password);
 
-      if (response && response.id) {
-        alert(`회원가입 완료! (ID: ${response.id})\n로그인해주세요.`);
+      if (response && response.email) {
+        alert(`회원가입 완료! (ID: ${response.email})\n로그인해주세요.`);
         navigate('/');
         return { success: true, message: '회원가입 성공' };
       }
