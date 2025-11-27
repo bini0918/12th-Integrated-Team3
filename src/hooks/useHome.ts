@@ -59,6 +59,21 @@ export const useHomeLogic = () => {
         if (target) pinMutation.mutate({ id, pinned: !target.pinned });
       },
       addLocation: (place: KakaoPlace) => {
+        const isDuplicate = locations.some(loc => {
+          const isSameName = loc.name === place.place_name;
+
+          const isSameLocation =
+            Math.abs((loc.lat ?? 0) - Number(place.y)) < 0.000001 &&
+            Math.abs((loc.lng ?? 0) - Number(place.x)) < 0.000001;
+
+          return isSameName || isSameLocation;
+        });
+
+        if (isDuplicate) {
+          alert('이미 추가된 장소입니다.');
+          return;
+        }
+
         addMutation.mutate(
           {
             placeName: place.place_name,

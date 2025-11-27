@@ -23,7 +23,6 @@ interface Props {
 }
 
 export default function SearchModal({
-  open,
   keyword,
   results,
   pagination,
@@ -47,7 +46,7 @@ export default function SearchModal({
   const handleConfirm = () => {
     if (selectedPlace) {
       onSelect(selectedPlace); // 부모에 전달
-      onClose(); // 모달 닫기
+      // onClose(); // 모달 닫기
     }
   };
 
