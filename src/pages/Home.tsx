@@ -38,10 +38,7 @@ const LoadingFallback = () => (
   </div>
 );
 
-// --- Main Component ---
-
 const Home = () => {
-  // Logic Hook에서 데이터와 핸들러를 가져옵니다. (View와 Logic의 완벽한 분리)
   const {
     locations,
     selectedLocation,
@@ -54,8 +51,6 @@ const Home = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* 1. 사이드바 */}
-      {/* handlers 객체가 useMemo로 안정화되어 Sidebar의 불필요한 리렌더링이 방지됩니다. */}
       <Sidebar
         locations={locations}
         selectedLocationId={selectedLocation?.id ?? null}
@@ -66,7 +61,6 @@ const Home = () => {
         onLogout={handlers.logout}
       />
 
-      {/* 2. 메인 컨텐츠 영역 */}
       <main className="flex flex-1 items-center justify-center p-4">
         {selectedLocation ? (
           <Suspense fallback={<LoadingFallback />}>
@@ -77,7 +71,6 @@ const Home = () => {
         )}
       </main>
 
-      {/* 3. 모달 영역 */}
       <AnimatePresence>
         {isSearchOpen && (
           <SearchModal
@@ -107,7 +100,6 @@ const Home = () => {
   );
 };
 
-// 최상위 Suspense Wrapper (위치 목록 로딩용)
 const HomePageWithSuspense = () => (
   <Suspense fallback={<div className="flex h-screen items-center justify-center">로딩 중...</div>}>
     <Home />
