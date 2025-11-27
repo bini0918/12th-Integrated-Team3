@@ -25,7 +25,7 @@ export function useWeatherViewModel(locationId?: number) {
   const weatherDisplayProps = current
     ? {
         date: new Date().toLocaleDateString('ko-KR', {
-          month: 'numeric',
+          month: 'long',
           day: 'numeric',
         }),
         temperature: current.results.temperature,
@@ -65,7 +65,6 @@ export function useWeatherViewModel(locationId?: number) {
             status: '보통',
           },
           {
-            //api 없는 데이터라 임의로 추가
             id: 'sunrise',
             label: '일출',
             status: current.results.sunrise,
