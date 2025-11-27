@@ -22,7 +22,7 @@ const Sidebar = ({
 }: SidebarProps) => {
   return (
     <aside className="w-60 bg-[#FFFFFF] pt-12 pb-8 pr-4 pl-4 text-black flex flex-col rounded-tr-[48px] rounded-br-[48px] min-h-screen">
-      <div className="flex-1">
+      <div className="w-full">
         <div className="flex gap-4 mb-6">
           <img src={map_pin} alt="Map Pin" className="w-10 h-10" />
           <h2 className="text-[20px] font-bold pt-1">위치 목록</h2>
@@ -78,7 +78,7 @@ const Sidebar = ({
         </ul>
       </div>
 
-      <div className="mt-4 pt-4 border-t border-gray-100">
+      <div className="mt-10 pt-4 border-t border-gray-100">
         <button
           onClick={onLogout}
           className="flex items-center gap-3 w-full px-3 py-3 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all cursor-pointer"
