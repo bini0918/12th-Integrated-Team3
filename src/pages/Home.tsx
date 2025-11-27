@@ -69,7 +69,14 @@ const Home = () => {
         lng: Number(place.x),
         address: place.road_address_name || place.address_name,
       },
-      { onSuccess: closeSearch },
+      {
+        onSuccess: data => {
+          // 위치 추가 시 선택 및 해당 위치 날씨 보여줌
+          selectLocation(data.id);
+
+          closeSearch();
+        },
+      },
     );
   };
 
