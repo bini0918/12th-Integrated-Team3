@@ -14,15 +14,20 @@ const Week = ({ location, days }: WeekProps) => {
   const fiveDays = hasData ? days.slice(0, 5) : [];
 
   const mapped = hasData
-    ? fiveDays.map(d => {
+    ? fiveDays.map((d, index) => {
         const amCode = mapCondition(d.amCondition);
         const pmCode = mapCondition(d.pmCondition);
 
         const amIcon = getWeatherIcon(amCode, true);
         const pmIcon = getWeatherIcon(pmCode, false);
 
+        const date = new Date();
+        date.setDate(date.getDate() + index);
+        const dateString = `${date.getMonth() + 1}.${date.getDate()}`;
+
         return {
           day: d.day,
+          date: dateString,
           humidityAm: d.amHumidity ?? 0,
           humidityPm: d.pmHumidity ?? 0,
           low: d.amMinTemp,
@@ -60,8 +65,9 @@ const Week = ({ location, days }: WeekProps) => {
                 />
               </div>
 
-              <div className="flex flex-col items-center mt-3">
-                <span className="text-sm font-medium text-gray-700">{item.day}</span>
+              <div className="text-center flex flex-col items-center mt-3 font-normal text-black text-4">
+                <span className="text-sm">{item.day}</span>
+                <span className="mt-1">{item.date}</span>
               </div>
             </div>
           ))}
